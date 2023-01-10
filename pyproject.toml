@@ -1,0 +1,40 @@
+[project]
+name = "dj_commerce_api"
+description = "Fully featured Ecommerce API build using Django and Django Rest Framework."
+version = "0.1.0"
+authors = [
+    { name = "Uzzal Hossain", email = "hello@uzzal.dev" }
+]
+classifiers = ["Private :: Do Not Upload"]
+dependencies = [
+    "django",
+    "psycopg2",
+    "django-environ"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pip-tools",
+    "black",
+    "isort",
+    "ipython",
+    "pre-commit",
+    "djangorestframework-stubs[compatible-mypy]",
+    "pytest-django",
+]
+
+[tool.isort]
+profile = "black"
+force_single_line = true
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "core.settings"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["test_*.py", "*_test.py", "test.py"]
