@@ -28,7 +28,7 @@ coreschema==0.0.4
     # via coreapi
 distlib==0.3.6
     # via virtualenv
-django==4.1.5
+django==4.1.7
     # via
     #   dj-commerce-api (pyproject.toml)
     #   django-stubs
