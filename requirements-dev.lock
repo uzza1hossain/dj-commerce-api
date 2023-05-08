@@ -3,4 +3,8 @@
 -e file:.
 asgiref==3.6.0
 django==4.2.1
+django-environ==0.10.0
+psycopg==3.1.9
+psycopg-binary==3.1.9
 sqlparse==0.4.4
+typing-extensions==4.5.0
