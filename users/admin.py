@@ -14,3 +14,6 @@ class CustomUserAdmin(admin.ModelAdmin):
         "is_staff",
         "is_superuser",
     ]
+
+
+admin.site.register(CustomUser, CustomUserAdmin)
