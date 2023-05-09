@@ -13,7 +13,9 @@ from pathlib import Path
 
 import environ
 
-env = environ.Env(DEBUG=(bool, False))
+env = environ.Env(
+    DEBUG=(bool, False),
+)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(env_file=BASE_DIR / ".env")
@@ -28,7 +30,7 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
-
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS")
 
 # Application definition
 
@@ -54,7 +56,10 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth.registration",
     "rest_framework_simplejwt",
-    'drf_spectacular',
+    "drf_spectacular",
+    "django_celery_beat",
+    "django_celery_results",
+    "djcelery_email",
 ]
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -145,10 +150,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.CustomUser"
 SITE_ID = 1
 
+EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+EMAIL_HOST = "localhost"
+EMAIL_PORT = 1025
+
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
@@ -156,7 +170,7 @@ REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_COOKIE": "dj-auth-token",
     "JWT_AUTH_REFRESH_COOKIE": "dj-refresh-token",
-    "OLD_PASSWORD_FIELD_ENABLED" : True,
+    "OLD_PASSWORD_FIELD_ENABLED": True,
 }
 
 # django-allauth settings
@@ -171,6 +185,17 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Fully featured E-Commerce API using Django and Django Rest Framework",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-    # 'SCHEMA_PATH_PREFIX': None, 
-
+    # 'SCHEMA_PATH_PREFIX': None,
 }
+
+# celery settings
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")  # type: ignore
+# CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="django-db")  # type: ignore
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_EMAIL_TASK_CONFIG = {'ignore_result': False}
+CELERY_RESULT_EXTENDED = True
+
+# CELERY_EMAIL_CHUNK_SIZE = 1
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
