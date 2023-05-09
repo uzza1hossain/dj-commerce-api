@@ -61,3 +61,4 @@ urlpatterns = [
     ),
     path("api/v1/auth/", include(dj_rest_auth_urls)),
 ]
+
