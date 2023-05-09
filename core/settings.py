@@ -156,6 +156,7 @@ REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_COOKIE": "dj-auth-token",
     "JWT_AUTH_REFRESH_COOKIE": "dj-refresh-token",
+    "OLD_PASSWORD_FIELD_ENABLED" : True,
 }
 
 # django-allauth settings
@@ -170,4 +171,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Fully featured E-Commerce API using Django and Django Rest Framework",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    # 'SCHEMA_PATH_PREFIX': None, 
+
 }

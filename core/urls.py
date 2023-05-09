@@ -14,10 +14,44 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from dj_rest_auth.jwt_auth import get_refresh_view
+from dj_rest_auth.registration.views import RegisterView
+from dj_rest_auth.registration.views import ResendEmailVerificationView
+from dj_rest_auth.registration.views import VerifyEmailView
+from dj_rest_auth.views import LoginView
+from dj_rest_auth.views import LogoutView
+from dj_rest_auth.views import PasswordChangeView
+from dj_rest_auth.views import PasswordResetConfirmView
+from dj_rest_auth.views import PasswordResetView
+from dj_rest_auth.views import UserDetailsView
 from django.contrib import admin
+from django.urls import include
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
+from rest_framework_simplejwt.views import TokenVerifyView
+
+dj_rest_auth_urls = [
+    path("signup/", RegisterView.as_view(), name="rest_register"),
+    path("signup/verify-email/", VerifyEmailView.as_view(), name="rest_verify_email"),
+    path(
+        "signup/resend-email/",
+        ResendEmailVerificationView.as_view(),
+        name="rest_resend_verify_email",
+    ),
+    path("login/", LoginView.as_view(), name="rest_login"),
+    path("logout/", LogoutView.as_view(), name="rest_logout"),
+    path("password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
+    path(
+        "password/reset/confirm/",
+        PasswordResetConfirmView.as_view(),
+        name="rest_password_reset_confirm",
+    ),
+    path("password/change/", PasswordChangeView.as_view(), name="rest_password_change"),
+    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),
+    path("user/", UserDetailsView.as_view(), name="rest_user_details"),
+]
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,4 +59,5 @@ urlpatterns = [
     path(
         "api/v1/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
+    path("api/v1/auth/", include(dj_rest_auth_urls)),
 ]
