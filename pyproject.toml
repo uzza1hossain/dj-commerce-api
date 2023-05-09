@@ -15,3 +15,4 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
+dev-dependencies = ["reorder-python-imports~=3.9.0"]
