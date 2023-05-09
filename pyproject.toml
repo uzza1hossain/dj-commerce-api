@@ -5,7 +5,7 @@ description = "Fully featured E-Commerce API using Django and Django Rest Framew
 authors = [
     { name = "Uzzal Hossain", email = "de3dm3nu11@gmail.com" }
 ]
-dependencies = ["django~=4.2.1", "django-environ~=0.10.0", "psycopg[binary]~=3.1.9"]
+dependencies = ["django~=4.2.1", "django-environ~=0.10.0", "psycopg[binary]~=3.1.9", "djangorestframework~=3.14.0", "dj-rest-auth~=4.0.0", "django-allauth~=0.54.0", "djangorestframework-simplejwt[crypto]~=5.2.2"]
 readme = "README.md"
 requires-python = ">= 3.11"
 
