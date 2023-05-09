@@ -53,6 +53,8 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "dj_rest_auth.registration",
+    "rest_framework_simplejwt",
+    'drf_spectacular',
 ]
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
@@ -145,7 +147,10 @@ SITE_ID = 1
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ("dj_rest_auth.jwt_auth.JWTCookieAuthentication",)
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 REST_AUTH = {
     "USE_JWT": True,
@@ -159,3 +164,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_PRESERVE_USERNAME_CASING = False
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "dj-commerce-api",
+    "DESCRIPTION": "Fully featured E-Commerce API using Django and Django Rest Framework",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
