@@ -16,8 +16,8 @@ class CustomUser(AbstractUser):
         return self.username
 
     class Meta:
-        verbose_name = "Custom User"
-        verbose_name_plural = "Custom Users"
+        verbose_name = "Auth User"
+        verbose_name_plural = "Auth Users"
 
 
 class User(CustomUser):

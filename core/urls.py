@@ -34,33 +34,46 @@ from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenVerifyView
 
 dj_rest_auth_urls = [
-    path("password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
+    path(
+        "password-reset/confirm/<uidb64>/<token>/",
+        TemplateView.as_view(template_name="password_reset_confirm.html"),
+        name="password_reset_confirm",
+    ),
+    path(
+        "password/reset/", PasswordResetView.as_view(), name="rest_password_reset"
+    ),  # OK
     path(
         "password/reset/confirm/",
         PasswordResetConfirmView.as_view(),
         name="rest_password_reset_confirm",
-    ),
-    path("signup/", RegisterView.as_view(), name="rest_register"),
-    path("signup/verify-email/", VerifyEmailView.as_view(), name="rest_verify_email"),
+    ),  # OK
+    path("signup/", RegisterView.as_view(), name="rest_register"),  # OK
+    path(
+        "signup/verify-email/", VerifyEmailView.as_view(), name="rest_verify_email"
+    ),  # OK
     path(
         "signup/resend-email/",
         ResendEmailVerificationView.as_view(),
         name="rest_resend_email",
-    ),
-    path("login/", LoginView.as_view(), name="rest_login"),
-    path("logout/", LogoutView.as_view(), name="rest_logout"),
-    path("password/change/", PasswordChangeView.as_view(), name="rest_password_change"),
-    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),
-    path("user/", UserDetailsView.as_view(), name="rest_user_details"),
+    ),  # OK
+    path("login/", LoginView.as_view(), name="rest_login"),  # OK
+    path("logout/", LogoutView.as_view(), name="rest_logout"),  # OK
+    path(
+        "password/change/", PasswordChangeView.as_view(), name="rest_password_change"
+    ),  # OK
+    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),  # OK
+    path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),  # OK
+    path("user/", UserDetailsView.as_view(), name="rest_user_details"),  # OK
     re_path(
         r"^account-confirm-email/(?P<key>[-:\w]+)/$",
         TemplateView.as_view(),
         name="account_confirm_email",
-    ),
+    ),  # OK
     path(
-        'account-email-verification-sent/', TemplateView.as_view(),
-        name='account_email_verification_sent',)
+        "account-email-verification-sent/",
+        TemplateView.as_view(),
+        name="account_email_verification_sent",
+    ),  # OK
 ]
 
 urlpatterns = [

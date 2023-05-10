@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -56,6 +57,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth.registration",
     "rest_framework_simplejwt",
+    # "rest_framework_simplejwt.token_blacklist",
     "drf_spectacular",
     "django_celery_beat",
     "django_celery_results",
@@ -155,10 +157,10 @@ EMAIL_HOST = "localhost"
 EMAIL_PORT = 1025
 
 
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-]
+# AUTHENTICATION_BACKENDS = [
+#     "django.contrib.auth.backends.ModelBackend",
+#     # "allauth.account.auth_backends.AuthenticationBackend",
+# ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -166,11 +168,18 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
 REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_COOKIE": "dj-auth-token",
     "JWT_AUTH_REFRESH_COOKIE": "dj-refresh-token",
     "OLD_PASSWORD_FIELD_ENABLED": True,
+    "JWT_AUTH_HTTPONLY": False,
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 # django-allauth settings
@@ -191,8 +200,8 @@ SPECTACULAR_SETTINGS = {
 # celery settings
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")  # type: ignore
 # CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="django-db")  # type: ignore
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-CELERY_EMAIL_TASK_CONFIG = {'ignore_result': False}
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_EMAIL_TASK_CONFIG = {"ignore_result": False}
 CELERY_RESULT_EXTENDED = True
 
 # CELERY_EMAIL_CHUNK_SIZE = 1
