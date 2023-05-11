@@ -32,6 +32,7 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenVerifyView
+from sellers.views import SellerRegistrationAPIView
 
 dj_rest_auth_urls = [
     path(
@@ -47,7 +48,12 @@ dj_rest_auth_urls = [
         PasswordResetConfirmView.as_view(),
         name="rest_password_reset_confirm",
     ),  # OK
-    path("signup/", RegisterView.as_view(), name="rest_register"),  # OK
+    path(
+        "signup/seller/",
+        SellerRegistrationAPIView.as_view(),
+        name="seller-signup",
+    ),  # OK. My own custom seller registration view based on RegisterView
+    path("signup/user/", RegisterView.as_view(), name="rest_register"),  # OK
     path(
         "signup/verify-email/", VerifyEmailView.as_view(), name="rest_verify_email"
     ),  # OK
@@ -63,7 +69,7 @@ dj_rest_auth_urls = [
     ),  # OK
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),  # OK
     path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),  # OK
-    path("user/", UserDetailsView.as_view(), name="rest_user_details"),  # OK
+    # path("me/", UserDetailsView.as_view(), name="rest_user_details"),  # OK
     re_path(
         r"^account-confirm-email/(?P<key>[-:\w]+)/$",
         TemplateView.as_view(),
@@ -83,5 +89,5 @@ urlpatterns = [
         "api/v1/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
     path("api/v1/auth/", include(dj_rest_auth_urls)),
-    path("api/v1/sellers/", include("sellers.urls")),
+    # path("api/v1/sellers/", include("sellers.urls")),
 ]
