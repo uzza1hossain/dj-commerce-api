@@ -15,4 +15,4 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = ["reorder-python-imports~=3.9.0", "setuptools~=67.7.2", "flower~=1.2.0"]
+dev-dependencies = ["reorder-python-imports~=3.9.0", "setuptools~=67.7.2", "flower~=1.2.0", "django-extensions~=3.2.1", "pywatchman~=1.4.1"]

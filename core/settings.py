@@ -209,3 +209,7 @@ CELERY_RESULT_EXTENDED = True
 # CELERY_ACCEPT_CONTENT = ['application/json']
 # CELERY_TASK_SERIALIZER = 'json'
 # CELERY_RESULT_SERIALIZER = 'json'
+
+
+if DEBUG:
+    INSTALLED_APPS += ["django_extensions"]

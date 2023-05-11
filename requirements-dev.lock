@@ -32,6 +32,7 @@ django-celery-beat==2.5.0
 django-celery-email==3.0.0
 django-celery-results==2.5.1
 django-environ==0.10.0
+django-extensions==3.2.1
 django-timezone-field==5.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
@@ -54,6 +55,7 @@ python-crontab==2.7.1
 python-dateutil==2.8.2
 python3-openid==3.2.0
 pytz==2023.3
+pywatchman==1.4.1
 pyyaml==6.0
 redis==4.5.5
 reorder-python-imports==3.9.0
