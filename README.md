@@ -5,16 +5,17 @@ Fully featured E-Commerce API using Django and Django Rest Framework
 | Feature                                  | Endpoint                            | Methods                 | Permission        | Implemented |
 | ---------------------------------------- | ----------------------------------- | ----------------------- | ----------------- | ----------- |
 | **Authentication**                       |                                     |                         |                   |             |
-| - Login                                  | /api/auth/login                     | POST                    | Public            | &#9989;     |
-| - SignUp                                 | /api/auth/signup                    | POST                    | Public            | &#10060;    |
-| - Logout                                 | /api/auth/logout                    | POST                    | User              | &#10060;    |
-| - Tokens                                 | /api/auth/tokens                    | POST                    | User              | &#10060;    |
-| **Password Management**                  |                                     |                         |                   |             |
-| - Change Password                        | /api/password/change                | POST                    | User              | &#10060;    |
-| - Forgot Password                        | /api/password/forgot                | POST                    | Public            | &#10060;    |
-| - Reset Password                         | /api/password/reset                 | POST                    | Public            | &#10060;    |
-| **Email Management**                     |                                     |                         |                   |             |
-| - Send Email Verification                | /api/email/send-verification        | POST                    | User              | &#10060;    |
+| - Login                                  | /api/v1/auth/login                  | POST                    | Public            | &#9989;     |
+| - Logout                                 | /api/v1/auth/logout                 | POST                    | Public            | &#9989;     |
+| - Change Password                        | /api/v1/auth/password/change        | POST                    | Authenticated     | &#9989;     |
+| - Password Reset                         | /api/v1/auth/password/reset         | POST                    | Public            | &#9989;     |
+| - Password Reset Confirm                 | /api/v1/auth/password/reset/confirm | POST                    | Public            | &#9989;     |
+| - Resend Verification email              | /api/v1/auth/signup/email-resend    | POST                    | Public            | &#9989;     |
+| - Verify Email                           | /api/v1/auth/signup/email-verify    | POST                    | Public            | &#9989;     |
+| - Seller Signup                          | /api/v1/auth/signup/seller          | POST                    | Public            | &#9989;     |
+| - User Signup                            | /api/v1/auth/signup/user            | POST                    | Public            | &#9989;     |
+| - Refresh Token                          | /api/v1/auth/token/refresh          | POST                    | Public            | &#9989;     |
+| - Verify Token                           | /api/v1/auth/token/verify           | POST                    | Public            | &#9989;     |
 | **User**                                 |                                     |                         |                   |             |
 | - Create New User                        | /api/users/create                   | POST                    | Admin             | &#10060;    |
 | - Get All Users                          | /api/users                          | GET                     | Public            | &#10060;    |

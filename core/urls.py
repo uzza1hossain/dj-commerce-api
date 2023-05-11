@@ -55,10 +55,10 @@ dj_rest_auth_urls = [
     ),  # OK. My own custom seller registration view based on RegisterView
     path("signup/user/", RegisterView.as_view(), name="rest_register"),  # OK
     path(
-        "signup/verify-email/", VerifyEmailView.as_view(), name="rest_verify_email"
+        "signup/email-verify/", VerifyEmailView.as_view(), name="rest_verify_email"
     ),  # OK
     path(
-        "signup/resend-email/",
+        "signup/email-resend/",
         ResendEmailVerificationView.as_view(),
         name="rest_resend_email",
     ),  # OK
