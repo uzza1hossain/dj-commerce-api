@@ -84,6 +84,7 @@ dj_rest_auth_urls = [
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("chaining/", include("smart_selects.urls")),
     path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/v1/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"

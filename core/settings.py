@@ -48,6 +48,7 @@ DJANGO_APPS = [
 LOCAL_APPS = [
     "users.apps.UsersConfig",
     "sellers.apps.SellersConfig",
+    "address.apps.AddressConfig",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -63,6 +64,8 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "django_celery_results",
     "djcelery_email",
+    "smart_selects",
+    "phonenumber_field",
 ]
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
