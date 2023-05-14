@@ -1,0 +1,57 @@
+from rest_framework import serializers
+
+from .models import Address
+from .models import Country
+from .models import State
+
+
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = ["name"]
+
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ["name"]
+
+
+class StateName(serializers.SlugRelatedField):
+    def get_queryset(self):
+        state_name = self.context["request"].data.get("state")
+        if state_name:
+            queryset = State.objects.filter(name=state_name)
+        else:
+            queryset = State.objects.none()
+        return queryset
+
+    def to_internal_value(self, data):
+        state_name = data
+        if state_name:
+            state = State.objects.filter(name=state_name).first()
+            if state:
+                return state
+        raise serializers.ValidationError("Invalid state name")
+
+    def to_representation(self, value):
+        return value.name
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    country = serializers.SlugRelatedField(
+        queryset=Country.objects.all(), slug_field="name"
+    )
+    state = StateName(queryset=State.objects.all(), slug_field="name")
+
+    class Meta:
+        model = Address
+        fields = [
+            "street_address",
+            "apt",
+            "city",
+            "zip_code",
+            "phone_number",
+            "country",
+            "state",
+        ]

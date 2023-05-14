@@ -90,5 +90,5 @@ urlpatterns = [
         "api/v1/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
     path("api/v1/auth/", include(dj_rest_auth_urls)),
-    # path("api/v1/sellers/", include("sellers.urls")),
+    path("api/v1/", include("address.urls")),
 ]
