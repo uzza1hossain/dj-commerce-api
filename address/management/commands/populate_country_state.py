@@ -18,7 +18,9 @@ class Command(BaseCommand):
             data = json.load(file)
 
         for item in data:
-            country = Country.objects.create(name=item["Country"], code=item["ISO"])
+            country = Country.objects.create(
+                name=item["Country"], code=item["ISO"], zipcode_regex=item["Regex"]
+            )
             for subdivision in item["Subdivisions"]:
                 State.objects.create(
                     name=subdivision["Name"], code=subdivision["Code"], country=country

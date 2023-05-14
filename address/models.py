@@ -6,7 +6,7 @@ from smart_selects.db_fields import ChainedForeignKey
 class Country(models.Model):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=2)
-    zipcode_regex = models.CharField(max_length=255)
+    zipcode_regex = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name

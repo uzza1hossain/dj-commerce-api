@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 
 from .models import Address
@@ -43,7 +44,7 @@ class AddressSerializer(serializers.ModelSerializer):
         queryset=Country.objects.all(), slug_field="name"
     )
     state = StateName(queryset=State.objects.all(), slug_field="name")
-
+    zip_code = serializers.CharField(max_length=10)
     class Meta:
         model = Address
         fields = [
@@ -55,3 +56,16 @@ class AddressSerializer(serializers.ModelSerializer):
             "country",
             "state",
         ]
+    def validate_zip_code(self, value):
+        country_name = self.initial_data.get('country') # type: ignore
+        try:
+            country = Country.objects.get(name=country_name)
+        except Country.DoesNotExist:
+            raise serializers.ValidationError('Invalid country')
+
+        zip_code_regex = country.zipcode_regex
+        if not re.match(zip_code_regex, value):
+            raise serializers.ValidationError('Invalid zip code')
+
+        return value
+
