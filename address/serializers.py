@@ -41,6 +41,7 @@ class StateName(serializers.SlugRelatedField):
 
 
 class AddressSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     country = serializers.SlugRelatedField(
         queryset=Country.objects.all(), slug_field="name"
     )
@@ -50,6 +51,7 @@ class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = [
+            "id",
             "street_address",
             "apt",
             "city",

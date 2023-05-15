@@ -9,7 +9,8 @@ class IsUserOrSeller(BasePermission):
         )
 
     def has_object_permission(self, request, view, obj):
-        return obj.associated_profile in [
-            request.user.user_profile,
-            request.user.seller_profile,
-        ]
+        if hasattr(request.user, "user_profile"):
+            return request.user.user_profile == obj.associated_profile
+        elif hasattr(request.user, "seller_profile"):
+            return request.user.seller_profile == obj.associated_profile
+        return False

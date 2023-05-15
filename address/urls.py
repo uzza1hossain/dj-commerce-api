@@ -10,8 +10,14 @@
 # ]
 from django.urls import path
 
-from .views import AddressCreateAPIView
+from .views import AddressListCreateAPIView
+from .views import AddressRetrieveUpdateDestroyAPIView
 
 urlpatterns = [
-    path("create/", AddressCreateAPIView.as_view(), name="address-create"),
+    path("", AddressListCreateAPIView.as_view(), name="address-create"),
+    path(
+        "<int:pk>/",
+        AddressRetrieveUpdateDestroyAPIView.as_view(),
+        name="address-detail",
+    ),
 ]
