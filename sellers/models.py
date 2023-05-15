@@ -1,6 +1,8 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from sellers.managers import SellerManager
 
+from address.models import Address
+from sellers.managers import SellerManager
 from users.models import CustomUser
 
 
@@ -17,7 +19,13 @@ class Seller(CustomUser):
 
 
 class SellerProfile(models.Model):
-    user = models.OneToOneField(Seller, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        Seller, on_delete=models.CASCADE, related_name="seller_profile"
+    )
 
     def __str__(self):
         return self.user.username
+
+    def get_addresses(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return Address.objects.filter(content_type=content_type, object_id=self.id)  # type: ignore

@@ -32,6 +32,7 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenVerifyView
+
 from sellers.views import SellerRegistrationAPIView
 
 dj_rest_auth_urls = [
@@ -90,5 +91,5 @@ urlpatterns = [
         "api/v1/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
     path("api/v1/auth/", include(dj_rest_auth_urls)),
-    path("api/v1/", include("address.urls")),
+    path("api/v1/address/", include("address.urls")),
 ]

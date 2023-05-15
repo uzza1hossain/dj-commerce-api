@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from .models import CustomUser
-
 from .models import User
 from .models import UserProfile
 

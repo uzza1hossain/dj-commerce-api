@@ -8,6 +8,3 @@ class CustomUserManager(UserManager):
 class UserManager(CustomUserManager):
     def get_queryset(self):
         return super().get_queryset().filter(is_seller=False).filter(is_superuser=False)
-
-
-
