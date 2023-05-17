@@ -37,6 +37,5 @@ class Category(MPTTModel):
         return reverse("category_detail", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
+        self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
