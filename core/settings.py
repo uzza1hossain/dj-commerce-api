@@ -50,6 +50,7 @@ LOCAL_APPS = [
     "sellers.apps.SellersConfig",
     "address.apps.AddressConfig",
     "categories.apps.CategoriesConfig",
+    "products.apps.ProductsConfig",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
