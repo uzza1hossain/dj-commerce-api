@@ -15,3 +15,9 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_children(self, obj) -> list:
         serializer = self.__class__(obj.children.all(), many=True)
         return serializer.data # type: ignore
+
+
+class ToggleActiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = []  #

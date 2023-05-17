@@ -26,7 +26,7 @@ Fully featured E-Commerce API using Django and Django Rest Framework
 | - Get Category                           | /api/v1/categories/:slug               | GET                       | Public             | &#9989;     |
 | - Update Category Details                | /api/v1/categories/:slug               | [PUT, PATCH]              | Seller/Staff/Admin | &#9989;     |
 | - Delete Category                        | /api/v1/categories/:slug               | DELETE                    | Staff/Admin        | &#9989;     |
-| - Toggle is_active                       | /api/v1/categories/:slug/toggle-active | Patch                     | Staff/Admin        | &#9989;     |
+| - Toggle is_active                       | /api/v1/categories/:slug/toggle-active | PATCH                       | Staff/Admin        | &#9989;     |
 | **User**                                 |                                        |                           |                    |             |
 | - Create New User                        | /api/users/create                      | POST                      | Admin              | &#10060;    |
 | - Get All Users                          | /api/users                             | GET                       | Public             | &#10060;    |

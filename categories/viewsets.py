@@ -7,6 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Category
 from .permissions import CategoryPermissions
 from .serializers import CategorySerializer
+from .serializers import ToggleActiveSerializer
 
 
 # Create your views here.
@@ -16,7 +17,7 @@ class CategoryViewSet(ModelViewSet):
     permission_classes = [CategoryPermissions]
     lookup_field = "slug"
 
-    @action(detail=True, methods=["patch"], url_path="toggle-active")
+    @action(detail=True, methods=["patch"], url_path="toggle-active", serializer_class=ToggleActiveSerializer)
     def toggle_active(self, request, slug=None):
         category = self.get_object()
         category.is_active = not category.is_active
