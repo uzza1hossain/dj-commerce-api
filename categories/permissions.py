@@ -5,13 +5,13 @@ class CategoryPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
         if view.action in ["list", "retrieve"]:
             return True
-        elif view.action in ["create", "update", "toggle_active"]:
+        elif view.action in ["create", "update"]:
             return request.user.is_authenticated and (
                 request.user.is_seller
                 or request.user.is_superuser
                 or request.user.is_staff
             )
-        elif view.action == "destroy":
+        elif view.action in ["destroy", "toggle_active"]:
             return request.user.is_superuser or request.user.is_staff
         return False
 

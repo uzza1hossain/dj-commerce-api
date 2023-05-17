@@ -5,7 +5,7 @@ from .models import Category
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
-    is_active = serializers.BooleanField(source="is_active")
+    is_active = serializers.BooleanField()
 
     class Meta:
         model = Category
