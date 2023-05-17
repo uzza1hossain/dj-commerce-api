@@ -92,4 +92,5 @@ urlpatterns = [
     ),
     path("api/v1/auth/", include(dj_rest_auth_urls)),
     path("api/v1/addresses/", include("address.urls")),
+    path("api/v1/categories/", include("categories.urls")),
 ]

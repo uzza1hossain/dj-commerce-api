@@ -1,6 +1,9 @@
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
+
 
 # Create your models here.
 class Category(MPTTModel):
@@ -24,8 +27,16 @@ class Category(MPTTModel):
 
     class Meta:
         ordering = ["name"]
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
+        verbose_name = "category"
+        verbose_name_plural = "categories"
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("category_detail", kwargs={"slug": self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
