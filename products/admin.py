@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import ProductAttribute, ProductAttributeValue, Product, ProductAttributeThrough
+from .models import Product
+from .models import ProductAttribute
+from .models import ProductAttributeThrough
+from .models import ProductAttributeValue
+from .models import ProductVariant
+from .models import VariantAttributeThrough
 
 
 @admin.register(ProductAttribute)
@@ -24,10 +29,10 @@ class ProductAdmin(admin.ModelAdmin):
         'slug',
         'sku',
         'description',
+        'owner',
         'category',
         'brand',
         'assets',
-        'stock',
         'is_active',
         'retail_price',
         'store_price',
@@ -37,6 +42,7 @@ class ProductAdmin(admin.ModelAdmin):
         'updated_at',
     )
     list_filter = (
+        'owner',
         'category',
         'brand',
         'assets',
@@ -49,6 +55,19 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug')
     prepopulated_fields = {'slug': ['name']}
     date_hierarchy = 'created_at'
+
+
+@admin.register(ProductVariant)
+class ProductVariantAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'stock')
+    list_filter = ('product',)
+    raw_id_fields = ('attributes',)
+
+
+@admin.register(VariantAttributeThrough)
+class VariantAttributeThroughAdmin(admin.ModelAdmin):
+    list_display = ('id', 'variant', 'attribute_value')
+    list_filter = ('variant', 'attribute_value')
 
 
 @admin.register(ProductAttributeThrough)

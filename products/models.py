@@ -39,7 +39,6 @@ class Product(models.Model):
     assets = models.ForeignKey(
         MediaAsset, on_delete=models.SET_NULL, null=True, blank=True
     )
-    stock = models.PositiveIntegerField(default=0)
     attributes = models.ManyToManyField(
         ProductAttribute, through="ProductAttributeThrough"
     )
@@ -61,12 +60,31 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    attributes = models.ManyToManyField(
+        ProductAttributeValue, through="VariantAttributeThrough"
+    )
+    stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.product} - Attributes: {self.attributes} - Stock: {self.stock}"
+
     def remove_stock(self, quantity):
         if self.stock >= quantity:
             self.stock -= quantity
             self.save()
         else:
             raise ValueError("Insufficient stock")
+
+
+class VariantAttributeThrough(models.Model):
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+    attribute_value = models.ForeignKey(ProductAttributeValue, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.variant} - Attribute Value: {self.attribute_value}"
 
 
 class ProductAttributeThrough(models.Model):

@@ -19,8 +19,8 @@ class MediaAsset(models.Model):
 
 
 class AssetFile(models.Model):
-    IMAGE_EXTENSIONS = [".png", ".jpg", ".jpeg", ".webp"]
-    VIDEO_EXTENSIONS = [".mp4"]
+    IMAGE_EXTENSIONS = ["png", "jpg", "jpeg", "webp"]
+    VIDEO_EXTENSIONS = ["mp4"]
     file = models.FileField(
         upload_to="media_assets/",
         validators=[
