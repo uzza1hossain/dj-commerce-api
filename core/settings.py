@@ -52,6 +52,7 @@ LOCAL_APPS = [
     "categories.apps.CategoriesConfig",
     "products.apps.ProductsConfig",
     "brands.apps.BrandsConfig",
+    "media_assets.apps.MediaAssetsConfig",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
