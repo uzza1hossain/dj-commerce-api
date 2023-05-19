@@ -14,6 +14,7 @@ from .managers import UserManager
 class CustomUser(AbstractUser):
     is_seller = models.BooleanField(default=False)
     objects = CustomUserManager()
+    users = UserManager()
 
     def __str__(self):
         return self.username
@@ -22,12 +23,16 @@ class CustomUser(AbstractUser):
         verbose_name = "Auth User"
         verbose_name_plural = "Auth Users"
 
+    def get_user_profile(self):
+        if hasattr(self, 'user_profile'):
+            return self.user_profile # type: ignore
+        return None
 
-class User(CustomUser):
-    objects = UserManager()
+    def get_seller_profile(self):
+        if hasattr(self, 'seller_profile'):
+            return self.seller_profile # type: ignore
+        return None
 
-    class Meta:
-        proxy = True
 
 
 class UserProfile(models.Model):
@@ -37,6 +42,26 @@ class UserProfile(models.Model):
     profile_picture = VersatileImageField(upload_to="user_profile_pictures", blank=True, null=True, placeholder_image=OnStoragePlaceholderImage(  # type: ignore
             path='images/default_profile_pic.jpg'
         ))
+
+    def __str__(self):
+        return self.user.username
+
+    def get_addresses(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return Address.objects.filter(content_type=content_type, object_id=self.id)  # type: ignore
+
+class SellerProfile(models.Model):
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="seller_profile"
+    )
+    profile_picture = VersatileImageField(
+        upload_to="seller_profile_pictures",
+        blank=True,
+        null=True,
+        placeholder_image=OnStoragePlaceholderImage(  # type: ignore
+            path="images/default_profile_pic.jpg"
+        ),
+    )
 
     def __str__(self):
         return self.user.username
