@@ -22,24 +22,36 @@ class CustomUser(AbstractUser):
         return self.username
 
     def get_user_profile(self):
-        if hasattr(self, 'user_profile'):
-            return self.user_profile # type: ignore
+        if hasattr(self, "user_profile"):
+            return self.user_profile  # type: ignore
         return None
 
     def get_seller_profile(self):
-        if hasattr(self, 'seller_profile'):
-            return self.seller_profile # type: ignore
+        if hasattr(self, "seller_profile"):
+            return self.seller_profile  # type: ignore
         return None
 
+    def get_profile(self):
+        if hasattr(self, "user_profile"):
+            return "user", self.user_profile  # type: ignore
+        elif hasattr(self, "seller_profile"):
+            return "seller", self.seller_profile  # type: ignore
+        else:
+            return None, None
 
 
 class UserProfile(models.Model):
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, related_name="user_profile"
     )
-    profile_picture = VersatileImageField(upload_to="user_profile_pictures", blank=True, null=True, placeholder_image=OnStoragePlaceholderImage(  # type: ignore
-            path='images/default_profile_pic.jpg'
-        ))
+    profile_picture = VersatileImageField(
+        upload_to="user_profile_pictures",
+        blank=True,
+        null=True,
+        placeholder_image=OnStoragePlaceholderImage(  # type: ignore
+            path="images/default_profile_pic.jpg"
+        ),
+    )
 
     def __str__(self):
         return self.user.username
@@ -47,6 +59,7 @@ class UserProfile(models.Model):
     def get_addresses(self):
         content_type = ContentType.objects.get_for_model(self)
         return Address.objects.filter(content_type=content_type, object_id=self.id)  # type: ignore
+
 
 class SellerProfile(models.Model):
     user = models.OneToOneField(
