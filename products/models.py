@@ -37,7 +37,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     sku = models.CharField(max_length=80, unique=True)
     description = models.TextField(blank=True, null=True)
-    owner = models.ForeignKey(SellerProfile, on_delete=models.CASCADE)
+    owner = models.ForeignKey(SellerProfile, on_delete=models.CASCADE, related_name="products")
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True, blank=True
     )
