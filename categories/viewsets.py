@@ -7,13 +7,14 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Category
 from .permissions import CategoryPermissions
-from .serializers import CategorySerializer, CategoryToggleActiveSerializer
+from .serializers import CategorySerializer
+from .serializers import CategoryToggleActiveSerializer
 
 
 # Create your views here.
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
-    # serializer_class = CategorySerializer
+    serializer_class = CategorySerializer
     permission_classes = [CategoryPermissions]
     lookup_field = "slug"
 
@@ -33,4 +34,8 @@ class CategoryViewSet(ModelViewSet):
         category.is_active = not category.is_active
         category.save()
 
-        return Response({"detail": "Toggle successful."})
+        return Response(
+            {
+                "detail": f"Toggle successful. Set {not category.is_active} to {category.is_active}."
+            }
+        )

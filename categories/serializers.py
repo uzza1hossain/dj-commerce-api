@@ -9,7 +9,7 @@ class CategoryToggleActiveSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
-    is_active = serializers.BooleanField()
+    # is_active = serializers.BooleanField()
 
     class Meta:
         model = Category
