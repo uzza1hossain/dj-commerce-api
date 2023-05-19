@@ -33,7 +33,7 @@ from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework_simplejwt.views import TokenVerifyView
 
-from sellers.views import SellerRegistrationAPIView
+from users.views import SellerRegistrationAPIView
 
 dj_rest_auth_urls = [
     path(

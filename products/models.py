@@ -5,8 +5,8 @@ from categories.models import Category
 from django.core.validators import MinValueValidator
 from django.db import models
 from media_assets.models import MediaAsset
-from sellers.models import Seller
-from sellers.models import SellerProfile
+
+from users.models import SellerProfile
 
 
 class ProductAttribute(models.Model):
@@ -37,7 +37,9 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     sku = models.CharField(max_length=80, unique=True)
     description = models.TextField(blank=True, null=True)
-    owner = models.ForeignKey(SellerProfile, on_delete=models.CASCADE, related_name="products")
+    owner = models.ForeignKey(
+        SellerProfile, on_delete=models.CASCADE, related_name="products"
+    )
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, null=True, blank=True
     )

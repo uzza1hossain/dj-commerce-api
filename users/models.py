@@ -6,6 +6,7 @@ from versatileimagefield.fields import VersatileImageField
 from versatileimagefield.placeholder import OnStoragePlaceholderImage
 
 from .managers import CustomUserManager
+from .managers import SellerManager
 from .managers import UserManager
 
 # Create your models here.
@@ -15,13 +16,10 @@ class CustomUser(AbstractUser):
     is_seller = models.BooleanField(default=False)
     objects = CustomUserManager()
     users = UserManager()
+    sellers = SellerManager()
 
     def __str__(self):
         return self.username
-
-    class Meta:
-        verbose_name = "Auth User"
-        verbose_name_plural = "Auth Users"
 
     def get_user_profile(self):
         if hasattr(self, 'user_profile'):

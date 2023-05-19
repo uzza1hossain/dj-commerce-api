@@ -1,6 +1,6 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
-from sellers.models import SellerProfile
+from users.models import SellerProfile
 
 
 class MediaAsset(models.Model):

@@ -47,7 +47,6 @@ DJANGO_APPS = [
 
 LOCAL_APPS = [
     "users.apps.UsersConfig",
-    "sellers.apps.SellersConfig",
     "address.apps.AddressConfig",
     "categories.apps.CategoriesConfig",
     "products.apps.ProductsConfig",
