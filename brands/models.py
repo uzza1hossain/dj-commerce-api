@@ -1,6 +1,5 @@
 from django.db import models
 from media_assets.models import MediaAsset
-from versatileimagefield.fields import VersatileImageField
 
 
 # Create your models here.
