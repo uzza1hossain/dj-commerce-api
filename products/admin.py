@@ -59,7 +59,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductVariant)
 class ProductVariantAdmin(admin.ModelAdmin):
-    list_display = ("id", "product", "stock")
+    list_display = ("id", "name", "product", "stock")
     list_filter = ("product",)
     raw_id_fields = ("attributes",)
 

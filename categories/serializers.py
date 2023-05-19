@@ -2,6 +2,10 @@ from rest_framework import serializers
 
 from .models import Category
 
+class CategoryToggleActiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = []
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()

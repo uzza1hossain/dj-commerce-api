@@ -10,6 +10,9 @@ from sellers.models import SellerProfile
 
 
 class ProductAttribute(models.Model):
+    owner = models.ForeignKey(
+        SellerProfile, on_delete=models.CASCADE, related_name="product_attributes"
+    )
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
 
@@ -18,6 +21,9 @@ class ProductAttribute(models.Model):
 
 
 class ProductAttributeValue(models.Model):
+    owner = models.ForeignKey(
+        SellerProfile, on_delete=models.CASCADE, related_name="product_attribute_values"
+    )
     attribute = models.ForeignKey(ProductAttribute, on_delete=models.CASCADE)
     value = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
@@ -62,14 +68,23 @@ class Product(models.Model):
 
 
 class ProductVariant(models.Model):
+    owner = models.ForeignKey(
+        SellerProfile, on_delete=models.CASCADE, related_name="product_variants"
+    )
+
+    name = models.CharField(max_length=255)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attributes = models.ManyToManyField(
         ProductAttributeValue, through="VariantAttributeThrough"
     )
     stock = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.product} - Attributes: {self.attributes} - Stock: {self.stock}"
+        # return self.name
+        attribute_values = [str(attr) for attr in self.attributes.all()]
+        attributes_string = ", ".join(attribute_values)
+        return f"{self.name} - Attributes: {attributes_string} - Stock: {self.stock}"
 
     def remove_stock(self, quantity):
         if self.stock >= quantity:
@@ -77,6 +92,10 @@ class ProductVariant(models.Model):
             self.save()
         else:
             raise ValueError("Insufficient stock")
+
+    def add_stock(self, quantity):
+        self.stock += quantity
+        self.save()
 
 
 class VariantAttributeThrough(models.Model):

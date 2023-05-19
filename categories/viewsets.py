@@ -7,20 +7,21 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Category
 from .permissions import CategoryPermissions
-from .serializers import CategorySerializer
+from .serializers import CategorySerializer, CategoryToggleActiveSerializer
 
 
 # Create your views here.
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    # serializer_class = CategorySerializer
     permission_classes = [CategoryPermissions]
     lookup_field = "slug"
 
     def get_serializer_class(self):
         if self.action == "toggle_active":
-            return serializers.Serializer
-        return super().get_serializer_class()
+            return CategoryToggleActiveSerializer
+        else:
+            return CategorySerializer
 
     @action(
         detail=True,
