@@ -1,3 +1,5 @@
+from core.mixins import SlugMixin
+from core.models import BaseModel
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -6,7 +8,7 @@ from mptt.models import TreeForeignKey
 
 
 # Create your models here.
-class Category(MPTTModel):
+class Category(MPTTModel, SlugMixin):
     name = models.CharField(
         max_length=100,
     )
@@ -35,7 +37,3 @@ class Category(MPTTModel):
 
     def get_absolute_url(self):
         return reverse("category_detail", kwargs={"slug": self.slug})
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Category, self).save(*args, **kwargs)

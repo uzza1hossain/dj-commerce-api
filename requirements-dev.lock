@@ -37,6 +37,7 @@ django-celery-results==2.5.1
 django-environ==0.10.0
 django-extensions==3.2.1
 django-js-asset==2.0.0
+django-lifecycle==1.0.0
 django-mptt==0.14.0
 django-phonenumber-field==7.1.0
 django-smart-selects==1.6.0
@@ -56,6 +57,7 @@ jsonschema==4.17.3
 kombu==5.2.4
 matplotlib-inline==0.1.6
 oauthlib==3.2.2
+packaging==23.1
 parso==0.8.3
 pexpect==4.8.0
 phonenumbers==8.13.11
@@ -91,6 +93,7 @@ typing-extensions==4.5.0
 tzdata==2023.3
 uritemplate==4.1.1
 urllib3==2.0.2
+urlman==2.0.1
 vine==5.0.0
 wcwidth==0.2.6
 

@@ -2,8 +2,11 @@ from decimal import Decimal
 
 from brands.models import Brand
 from categories.models import Category
+from core.mixins import SlugMixin
+from core.models import BaseModel
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.text import slugify
 from media_assets.models import MediaAsset
 
 from users.models import SellerProfile
@@ -32,7 +35,7 @@ class ProductAttributeValue(models.Model):
         return self.value
 
 
-class Product(models.Model):
+class Product(BaseModel, SlugMixin):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     sku = models.CharField(max_length=80, unique=True)
@@ -62,19 +65,19 @@ class Product(models.Model):
         default=False,
     )
     weight = models.FloatField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
 
-class ProductVariant(models.Model):
+class ProductVariant(BaseModel, SlugMixin):
     owner = models.ForeignKey(
         SellerProfile, on_delete=models.CASCADE, related_name="product_variants"
     )
 
     name = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    sku = models.CharField(max_length=80, unique=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attributes = models.ManyToManyField(
         ProductAttributeValue, through="VariantAttributeThrough"

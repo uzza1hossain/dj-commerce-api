@@ -2,6 +2,9 @@ from address.models import Address
 from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django_lifecycle import AFTER_CREATE
+from django_lifecycle import hook
+from django_lifecycle import LifecycleModel
 from versatileimagefield.fields import VersatileImageField
 from versatileimagefield.placeholder import OnStoragePlaceholderImage
 
@@ -38,6 +41,13 @@ class CustomUser(AbstractUser):
             return "seller", self.seller_profile  # type: ignore
         else:
             return None, None
+
+    @hook(AFTER_CREATE)
+    def create_profile(self):
+        if self.is_seller:
+            SellerProfile.objects.create(user=self)
+        elif not self.is_superuser:
+            UserProfile.objects.create(user=self)
 
 
 class UserProfile(models.Model):
