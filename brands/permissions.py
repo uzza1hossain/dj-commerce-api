@@ -8,8 +8,11 @@ class IsBrandOwnerOrPublic(permissions.BasePermission):
         if isinstance(obj, Brand):
             if request.method in permissions.SAFE_METHODS:
                 return True
-            if obj.owner == request.user.seller_profile:
+            if (
+                request.user.is_authenticated
+                and obj.owner == request.user.seller_profile
+            ):
                 return request.method != "DELETE" or not obj.is_public
             if request.method == "DELETE" and obj.is_public:
-                return request.user.is_staff
+                return request.user.is_staff or request.user.is_superuser
         return False

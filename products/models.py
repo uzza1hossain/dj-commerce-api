@@ -6,7 +6,6 @@ from core.mixins import SlugMixin
 from core.models import BaseModel
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.utils.text import slugify
 from media_assets.models import MediaAsset
 
 from users.models import SellerProfile
@@ -94,13 +93,13 @@ class ProductVariant(SlugMixin, BaseModel):
     def remove_stock(self, quantity):
         if self.stock >= quantity:
             self.stock -= quantity
-            self.save()
+            self.save(skip_hooks=True)
         else:
             raise ValueError("Insufficient stock")
 
     def add_stock(self, quantity):
         self.stock += quantity
-        self.save()
+        self.save(skip_hooks=True)
 
 
 class VariantAttributeThrough(models.Model):

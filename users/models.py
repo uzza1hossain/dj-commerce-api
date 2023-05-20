@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django_lifecycle import AFTER_CREATE
 from django_lifecycle import hook
-from django_lifecycle import LifecycleModel
+from django_lifecycle import LifecycleModelMixin
 from versatileimagefield.fields import VersatileImageField
 from versatileimagefield.placeholder import OnStoragePlaceholderImage
 
@@ -15,7 +15,7 @@ from .managers import UserManager
 # Create your models here.
 
 
-class CustomUser(AbstractUser):
+class CustomUser(LifecycleModelMixin, AbstractUser):
     is_seller = models.BooleanField(default=False)
     objects = CustomUserManager()
     users = UserManager()

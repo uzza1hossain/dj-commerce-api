@@ -2,13 +2,12 @@ from core.mixins import SlugMixin
 from core.models import BaseModel
 from django.db import models
 from django.urls import reverse
-from django.utils.text import slugify
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 
 
 # Create your models here.
-class Category(SlugMixin,MPTTModel):
+class Category(SlugMixin, MPTTModel):
     name = models.CharField(
         max_length=100,
     )
