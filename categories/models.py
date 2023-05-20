@@ -8,7 +8,7 @@ from mptt.models import TreeForeignKey
 
 
 # Create your models here.
-class Category(MPTTModel, SlugMixin):
+class Category(SlugMixin,MPTTModel):
     name = models.CharField(
         max_length=100,
     )

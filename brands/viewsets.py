@@ -9,6 +9,7 @@ class BrandViewSet(viewsets.ModelViewSet):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
     permission_classes = [IsBrandOwnerOrPublic]
+    lookup_field = "slug"
 
     def get_queryset(self):
         user = self.request.user

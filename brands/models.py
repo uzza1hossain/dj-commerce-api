@@ -7,7 +7,7 @@ from users.models import SellerProfile
 
 
 # Create your models here.
-class Brand(BaseModel, SlugMixin):
+class Brand(SlugMixin, BaseModel):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)

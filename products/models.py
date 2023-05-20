@@ -35,7 +35,7 @@ class ProductAttributeValue(models.Model):
         return self.value
 
 
-class Product(BaseModel, SlugMixin):
+class Product(SlugMixin, BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     sku = models.CharField(max_length=80, unique=True)
@@ -70,7 +70,7 @@ class Product(BaseModel, SlugMixin):
         return self.name
 
 
-class ProductVariant(BaseModel, SlugMixin):
+class ProductVariant(SlugMixin, BaseModel):
     owner = models.ForeignKey(
         SellerProfile, on_delete=models.CASCADE, related_name="product_variants"
     )
