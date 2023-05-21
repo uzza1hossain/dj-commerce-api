@@ -6,6 +6,11 @@ from core.mixins import SlugMixin
 from core.models import BaseModel
 from django.core.validators import MinValueValidator
 from django.db import models
+from django_lifecycle import AFTER_DELETE
+from django_lifecycle import AFTER_SAVE
+from django_lifecycle import BEFORE_SAVE
+from django_lifecycle import hook
+from django_lifecycle import LifecycleModel
 from media_assets.models import MediaAsset
 
 from users.models import SellerProfile
@@ -34,7 +39,7 @@ class ProductAttributeValue(models.Model):
         return self.value
 
 
-class Product(SlugMixin, BaseModel):
+class Product(LifecycleModel, SlugMixin, BaseModel):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     sku = models.CharField(max_length=80, unique=True)
@@ -56,50 +61,48 @@ class Product(SlugMixin, BaseModel):
     retail_price = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))]
     )
-    store_price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-    )
-    is_digital = models.BooleanField(
-        default=False,
-    )
+    store_price = models.DecimalField(max_digits=5, decimal_places=2)
+    is_digital = models.BooleanField(default=False)
     weight = models.FloatField()
+    stock = models.PositiveIntegerField(default=0, editable=False)
 
-    def __str__(self):
-        return self.name
+    @hook(AFTER_SAVE, when="product_variants__stock", has_changed=True)
+    @hook(AFTER_DELETE, when="product_variants")
+    def update_stock(self):
+        self.stock = sum(variant.stock for variant in self.product_variants.all())  # type: ignore
+        self.save()
 
 
-class ProductVariant(SlugMixin, BaseModel):
+class ProductVariant(LifecycleModel, SlugMixin, BaseModel):
     owner = models.ForeignKey(
         SellerProfile, on_delete=models.CASCADE, related_name="product_variants"
     )
-
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     sku = models.CharField(max_length=80, unique=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="product_variants"
+    )
     attributes = models.ManyToManyField(
         ProductAttributeValue, through="VariantAttributeThrough"
     )
     stock = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=False)
 
-    def __str__(self):
-        # return self.name
-        attribute_values = [str(attr) for attr in self.attributes.all()]
-        attributes_string = ", ".join(attribute_values)
-        return f"{self.name} - Attributes: {attributes_string} - Stock: {self.stock}"
+    @hook(BEFORE_SAVE, when="stock", has_changed=True)
+    def update_product_stock(self):
+        self.product.update_stock()
 
     def remove_stock(self, quantity):
         if self.stock >= quantity:
             self.stock -= quantity
-            self.save(skip_hooks=True)
+            self.save()
         else:
             raise ValueError("Insufficient stock")
 
     def add_stock(self, quantity):
         self.stock += quantity
-        self.save(skip_hooks=True)
+        self.save()
 
 
 class VariantAttributeThrough(models.Model):
