@@ -9,6 +9,9 @@ dependencies = ["django~=4.2.1", "django-environ~=0.10.0", "psycopg[binary]~=3.1
 readme = "README.md"
 requires-python = ">= 3.11"
 
+[project.optional-dependencies]
+tests = ["pytest~=7.3.1", "pytest-django~=4.5.2", "pytest-sugar~=0.9.7", "factory-boy~=3.2.1", "pytest-icdiff~=0.6", "pytest-clarity~=1.0.1", "pytest-html~=3.2.0"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -16,3 +19,9 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = ["reorder-python-imports~=3.9.0", "setuptools~=67.7.2", "flower~=1.2.0", "django-extensions~=3.2.1", "pywatchman~=1.4.1", "ipython~=8.13.2"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "--color=yes --html=reports/test_report.html"
+# testpaths = ["core/tests"]
