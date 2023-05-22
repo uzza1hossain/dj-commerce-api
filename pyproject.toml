@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">= 3.11"
 
 [project.optional-dependencies]
-tests = ["pytest~=7.3.1", "pytest-django~=4.5.2", "pytest-sugar~=0.9.7", "factory-boy~=3.2.1", "pytest-icdiff~=0.6", "pytest-clarity~=1.0.1", "pytest-html~=3.2.0"]
+tests = ["pytest~=7.3.1", "pytest-django~=4.5.2", "pytest-sugar~=0.9.7", "factory-boy~=3.2.1", "pytest-icdiff~=0.6", "pytest-clarity~=1.0.1", "pytest-html~=3.2.0", "coverage~=7.2.5"]
 
 [build-system]
 requires = ["hatchling"]
@@ -24,4 +24,12 @@ dev-dependencies = ["reorder-python-imports~=3.9.0", "setuptools~=67.7.2", "flow
 DJANGO_SETTINGS_MODULE = "core.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 addopts = "--color=yes --html=reports/test_report.html"
-# testpaths = ["core/tests"]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning",]
+
+[tool.coverage]
+# fail_under = 80
+[tool.coverage.run]
+branch = true
+source = [".",]
+
