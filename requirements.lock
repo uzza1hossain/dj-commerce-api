@@ -43,6 +43,7 @@ djangorestframework-simplejwt==5.2.2
 drf-spectacular==0.26.2
 factory-boy==3.2.1
 faker==18.9.0
+freezegun==1.2.2
 icdiff==2.0.6
 idna==3.4
 inflection==0.5.1

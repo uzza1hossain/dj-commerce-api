@@ -51,6 +51,7 @@ executing==1.2.0
 factory-boy==3.2.1
 faker==18.9.0
 flower==1.2.0
+freezegun==1.2.2
 humanize==4.6.0
 icdiff==2.0.6
 idna==3.4
