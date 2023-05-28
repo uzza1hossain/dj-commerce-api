@@ -14,16 +14,13 @@ def extract_verification_code_from_email(email_body):
 
 
 
-from django.utils.http import urlsafe_base64_decode
 
 def extract_username_and_verification_code_from_email(email_body):
-    print("email_body: ", email_body)
     url_pattern = r"http://testserver/api/v1/auth/password-reset/confirm/(?P<uidb64>[^/]+)/(?P<code>[^/\n]+)/"
     match = re.search(url_pattern, email_body)
     if match:
         uidb64 = match.group("uidb64")
         code = match.group("code")
-        print("uidb64: ", uidb64, "code: ", code)
         return uidb64, code
         
         # Decode uidb64 using urlsafe_base64_decode
@@ -36,7 +33,4 @@ def extract_username_and_verification_code_from_email(email_body):
     #     uid = None
     #     code = None
     # return uid, code
-
-
-
 

@@ -68,6 +68,7 @@ class TestAuthEndpoints:
         )
         assert response.status_code == status.HTTP_200_OK
         assert response.data["access"] != ""
+        return response
 
     def _send_seller_login_request(self):
         response = client.post(
@@ -365,10 +366,6 @@ class TestAuthEndpoints:
         )
         assert response.status_code == status.HTTP_200_OK
         assert response.data["detail"] == "Password reset e-mail has been sent."
-        # client.logout()
-        # code = extract_username_and_verification_code_from_email(mail.outbox[1].body)
-        # user_id = CustomUser.objects.get(username=self.payload["username"]).pk
-        # user_id_base64 = urlsafe_base64_encode(force_bytes(str(user_id)))
         user_id, code = extract_username_and_verification_code_from_email(
             mail.outbox[1].body
         )
@@ -382,8 +379,31 @@ class TestAuthEndpoints:
                 "token": code,
             },
         )
-        print(response.data)
         assert response.status_code == status.HTTP_200_OK
         assert (
             response.data["detail"] == "Password has been reset with the new password."
         )
+        self.payload["password1"] = "new_password"
+        self.payload["password2"] = "new_password"
+        self._send_login_request()
+        client.logout()
+        
+    def test_verify_and_refresh_token(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        response = client.post(reverse("rest_verify_email"), {"key": verification_code})
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "ok"
+        response = self._send_login_request()
+        access_token = client.cookies["dj-auth-token"]
+        verify = client.post(reverse("token_verify"), {"token": access_token})
+        assert verify.status_code == status.HTTP_200_OK
+        refresh_token = client.cookies["dj-refresh-token"]
+        refresh = client.post(reverse("token_refresh"), {"refresh": refresh_token})
+        assert refresh.status_code == status.HTTP_200_OK
+        assert refresh.data["access"] != access_token
+        client.logout()
+        
+        
+        
+
