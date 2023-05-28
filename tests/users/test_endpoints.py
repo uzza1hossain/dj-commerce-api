@@ -1,3 +1,5 @@
+import base64
+from base64 import urlsafe_b64encode
 from datetime import timedelta
 
 import pytest
@@ -9,17 +11,21 @@ from django.core import mail
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import salted_hmac
+from django.utils.encoding import force_bytes
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_encode
 from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.test import APIClient
+from tests.utils import extract_username_and_verification_code_from_email
 from tests.utils import extract_verification_code_from_email
 
 from users.models import CustomUser
 from users.models import SellerProfile
 from users.models import UserProfile
 
-client = APIClient()
 
+client = APIClient()
 
 
 @pytest.mark.django_db(transaction=True)
@@ -34,7 +40,6 @@ class TestAuthEndpoints:
     def _send_registration_request(self):
         mail.outbox = []
         response = client.post("/api/v1/auth/signup/user/", self.payload)
-        print(response.data)
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data["detail"] == "Verification e-mail sent."
 
@@ -47,6 +52,33 @@ class TestAuthEndpoints:
         assert user.username == self.payload["username"]
         assert user.email == self.payload["email"]
         assert user_profile.user == user
+
+    def _send_logout_request(self):
+        response = client.post("/api/v1/auth/logout/")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "Successfully logged out."
+
+    def _send_login_request(self):
+        response = client.post(
+            "/api/v1/auth/login/",
+            {
+                "username": self.payload["username"],
+                "password": self.payload["password1"],
+            },
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["access"] != ""
+
+    def _send_seller_login_request(self):
+        response = client.post(
+            "/api/v1/auth/login/",
+            {
+                "username": self.seller_payload["username"],
+                "password": self.seller_payload["password1"],
+            },
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["access"] != ""
 
     def _send_seller_registration_request(self):
         mail.outbox = []
@@ -200,34 +232,14 @@ class TestAuthEndpoints:
         verification_code = extract_verification_code_from_email(mail.outbox[0].body)
         response = client.post(reverse("rest_verify_email"), {"key": verification_code})
 
-        response = client.post(
-            reverse("rest_login"),
-            {
-                "username": self.payload["username"],
-                "email": self.payload["email"],
-                "password": self.payload["password1"],
-            },
-        )
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data["access"] != ""
+        self._send_login_request()
         client.logout()
 
         self._send_seller_registration_request()
         verification_code = extract_verification_code_from_email(mail.outbox[0].body)
         response = client.post(reverse("rest_verify_email"), {"key": verification_code})
 
-        response = client.post(
-            reverse("rest_login"),
-            {
-                "username": self.seller_payload["username"],
-                "email": self.seller_payload["email"],
-                "password": self.seller_payload["password1"],
-            },
-        )
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data["access"] != ""
+        self._send_seller_login_request()
         client.logout()
 
     def test_login_with_invalid_credentials(self):
@@ -249,4 +261,129 @@ class TestAuthEndpoints:
         assert (
             response.data["non_field_errors"][0]
             == "Unable to log in with provided credentials."
+        )
+
+    def test_login_with_unverified_email(self):
+        self._send_registration_request()
+        response = client.post(
+            reverse("rest_login"),
+            {
+                "username": self.payload["username"],
+                "email": self.payload["email"],
+                "password": self.payload["password1"],
+            },
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data["non_field_errors"][0] == "E-mail is not verified."
+
+    def test_logout(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        client.post(reverse("rest_verify_email"), {"key": verification_code})
+
+        self._send_login_request()
+        self._send_logout_request()
+
+        client.logout()
+
+    def test_logout_with_invalid_token(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        client.post(reverse("rest_verify_email"), {"key": verification_code})
+
+        self._send_login_request()
+        self._send_logout_request()
+
+        response = client.post(reverse("rest_logout"))
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.data["detail"] == "Given token not valid for any token type"
+        client.logout()
+
+    def test_logout_with_expired_token(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        client.post(reverse("rest_verify_email"), {"key": verification_code})
+
+        self._send_login_request()
+        self._send_logout_request()
+
+        with freeze_time("2023-06-02"):
+            response = client.post(reverse("rest_logout"))
+            print(response.data)
+            assert response.status_code == status.HTTP_401_UNAUTHORIZED
+            assert response.data["detail"] == "Given token not valid for any token type"
+
+        client.logout()
+
+    def test_change_password(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        client.post(reverse("rest_verify_email"), {"key": verification_code})
+
+        self._send_login_request()
+        print(self.payload)
+        payload = {
+            "old_password": self.payload["password1"],
+            "new_password1": "new_password",
+            "new_password2": "new_password",
+        }
+        print(payload)
+        response = client.post((reverse("rest_password_change")), payload)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "New password has been saved."
+        client.logout()
+
+    def test_change_password_with_invalid_old_password(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        client.post(reverse("rest_verify_email"), {"key": verification_code})
+
+        self._send_login_request()
+        payload = {
+            "old_password": "invalid_password",
+            "new_password1": "new_password",
+            "new_password2": "new_password",
+        }
+
+        response = client.post((reverse("rest_password_change")), payload)
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert (
+            response.data["old_password"][0]
+            == "Your old password was entered incorrectly. Please enter it again."
+        )
+        client.logout()
+
+    def test_reset_password(self):
+        self._send_registration_request()
+        verification_code = extract_verification_code_from_email(mail.outbox[0].body)
+        client.post(reverse("rest_verify_email"), {"key": verification_code})
+        response = client.post(
+            reverse("rest_password_reset"), {"email": self.payload["email"]}
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "Password reset e-mail has been sent."
+        # client.logout()
+        # code = extract_username_and_verification_code_from_email(mail.outbox[1].body)
+        # user_id = CustomUser.objects.get(username=self.payload["username"]).pk
+        # user_id_base64 = urlsafe_base64_encode(force_bytes(str(user_id)))
+        user_id, code = extract_username_and_verification_code_from_email(
+            mail.outbox[1].body
+        )
+
+        response = client.post(
+            reverse("rest_password_reset_confirm"),
+            {
+                "new_password1": "new_password",
+                "new_password2": "new_password",
+                "uid": user_id,
+                "token": code,
+            },
+        )
+        print(response.data)
+        assert response.status_code == status.HTTP_200_OK
+        assert (
+            response.data["detail"] == "Password has been reset with the new password."
         )
