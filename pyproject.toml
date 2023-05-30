@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">= 3.11"
 
 [project.optional-dependencies]
-tests = ["pytest~=7.3.1", "pytest-django~=4.5.2", "pytest-sugar~=0.9.7", "factory-boy~=3.2.1", "pytest-icdiff~=0.6", "pytest-clarity~=1.0.1", "pytest-html~=3.2.0", "coverage~=7.2.5", "pytest-factoryboy~=2.5.1", "pytest-cov~=4.0.0", "freezegun~=1.2.2"]
+tests = ["pytest~=7.3.1", "pytest-django~=4.5.2", "pytest-sugar~=0.9.7", "factory-boy~=3.2.1", "pytest-icdiff~=0.6", "pytest-clarity~=1.0.1", "pytest-html~=3.2.0", "coverage~=7.2.5", "pytest-factoryboy~=2.5.1", "pytest-cov~=4.0.0", "freezegun~=1.2.2", "faker-e164~=0.1.0"]
 
 [build-system]
 requires = ["hatchling"]

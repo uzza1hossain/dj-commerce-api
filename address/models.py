@@ -32,9 +32,9 @@ class Address(models.Model):
     apt = models.CharField(max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    state = ChainedForeignKey(State, chained_field="country", chained_model_field="country", show_all=False, auto_choose=True)  # type: ignore
+    state = ChainedForeignKey(State, chained_field="country", chained_model_field="country", show_all=False, auto_choose=True, blank=True, null=True)  # type: ignore
     zip_code = models.CharField(max_length=10)
-    phone_number = PhoneNumberField(blank=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
