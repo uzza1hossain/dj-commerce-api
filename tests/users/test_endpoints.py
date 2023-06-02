@@ -395,15 +395,16 @@ class TestAuthEndpoints:
         assert response.status_code == status.HTTP_200_OK
         assert response.data["detail"] == "ok"
         response = self._send_login_request()
-        access_token = client.cookies["dj-auth-token"]
+        access_token = response.data["access"]
+        # access_token = client.cookies["dj-auth-token"]
+        print(client.cookies["dj-auth-token"])
         verify = client.post(reverse("token_verify"), {"token": access_token})
         assert verify.status_code == status.HTTP_200_OK
-        refresh_token = client.cookies["dj-refresh-token"]
+        # refresh_token = client.cookies["dj-refresh-token"]
+        print(client.cookies["dj-refresh-token"])
+        refresh_token = response.data["refresh"]
         refresh = client.post(reverse("token_refresh"), {"refresh": refresh_token})
         assert refresh.status_code == status.HTTP_200_OK
         assert refresh.data["access"] != access_token
         client.logout()
-        
-        
-        
 

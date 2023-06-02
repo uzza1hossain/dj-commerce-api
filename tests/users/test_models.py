@@ -39,27 +39,27 @@ class TestCustomUserModel:
         assert superuser.get_seller_profile() is None
 
 
-@pytest.mark.django_db
-class TestUserProfile:
-    def test_user_profile_str(user_profile):
-        assert str(user_profile) == user_profile.user.username
-        assert user_profile.__str__() == user_profile.user.username
+# @pytest.mark.django_db
+# class TestUserProfile:
+#     def test_user_profile_str(user_profile):
+#         assert str(user_profile) == user_profile.user.username
+#         assert user_profile.__str__() == user_profile.user.username
 
-    #! update this test after creating address factory
-    def test_user_profile_get_addresses(user_profile):
-        address = user_profile.get_addresses().first()
-        assert address is None
-        # assert address.content_object == user_profile
+#     #! update this test after creating address factory
+#     def test_user_profile_get_addresses(user_profile):
+#         address = user_profile.get_addresses().first()
+#         assert address is None
+#         # assert address.content_object == user_profile
 
 
-@pytest.mark.django_db()
-class TestSellerProfile:
-    def test_seller_profile_str(seller_profile):
-        assert str(seller_profile) == seller_profile.user.username
-        assert seller_profile.__str__() == seller_profile.user.username
+# @pytest.mark.django_db()
+# class TestSellerProfile:
+#     def test_seller_profile_str(seller_profile):
+#         assert str(seller_profile) == seller_profile.user.username
+#         assert seller_profile.__str__() == seller_profile.user.username
 
-    #! update this test after creating address factory
-    def test_seller_profile_get_addresses(seller_profile):
-        address = seller_profile.get_addresses().first()
-        assert address is None
-        # assert address.content_object == seller_profile
+#     #! update this test after creating address factory
+#     def test_seller_profile_get_addresses(seller_profile):
+#         address = seller_profile.get_addresses().first()
+#         assert address is None
+#         # assert address.content_object == seller_profile

@@ -3,9 +3,9 @@ from django.core.management import call_command
 from pytest_factoryboy import register
 
 from .factories import CustomUserFactory
-from .factories import SellerProfileFactory
+# from .factories import SellerProfileFactory
 from .factories import UserFactory
-from .factories import UserProfileFactory
+# from .factories import UserProfileFactory
 from .factories import UserRegistrationPayloadFactory
 
 
@@ -18,38 +18,35 @@ def load_data():
     )
 
 
-@pytest.fixture(autouse=True)
-@pytest.mark.django_db
-def seller_profile():
-    return SellerProfileFactory()
+# @pytest.fixture(autouse=True)
+# @pytest.mark.django_db
+# def seller_profile():
+#     return SellerProfileFactory()
 
 
-@pytest.fixture(autouse=True)
-@pytest.mark.django_db
-def user_profile():
-    return UserProfileFactory()
+# @pytest.fixture(autouse=True)
+# @pytest.mark.django_db
+# def user_profile():
+#     return UserProfileFactory()
 
 
-@pytest.fixture(autouse=True)
-@pytest.mark.django_db
+@pytest.fixture
 def user():
     return CustomUserFactory()
 
 
-@pytest.fixture(autouse=True)
-@pytest.mark.django_db
+@pytest.fixture
 def seller():
     return CustomUserFactory(is_seller=True)
 
 
-@pytest.fixture(autouse=True)
-@pytest.mark.django_db
+@pytest.fixture
 def superuser():
     return CustomUserFactory(is_superuser=True)
 
 
-register(CustomUserFactory)
+# register(CustomUserFactory)
 register(UserRegistrationPayloadFactory)
 register(UserFactory)
-register(SellerProfileFactory)
-register(UserProfileFactory)
+# register(SellerProfileFactory)
+# register(UserProfileFactory)

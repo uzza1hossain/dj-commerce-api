@@ -50,46 +50,46 @@ class CustomUserFactory(DjangoModelFactory):
         self.save()
 
 
-class UserProfileFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = UserProfile
+# class UserProfileFactory(factory.django.DjangoModelFactory):
+#     class Meta:
+#         model = UserProfile
 
-    user = factory.SubFactory(CustomUserFactory)
-    profile_picture = factory.django.ImageField(width=100, height=100)
+#     user = factory.SubFactory(CustomUserFactory)
+#     profile_picture = factory.django.ImageField(width=100, height=100)
 
-    @classmethod
-    def _after_postgeneration(cls, obj, create, results=None):
-        if create:
-            # content_type = ContentType.objects.get_for_model(obj)
-            # address = AddressFactory.create(content_type=content_type, object_id=obj.id)
-            # obj.save()
-            warmer = VersatileImageFieldWarmer(
-                instance_or_queryset=obj,
-                rendition_key_set="profile_picture",
-                image_attr="profile_picture",
-            )
-            warmer.warm()
+#     @classmethod
+#     def _after_postgeneration(cls, obj, create, results=None):
+#         if create:
+#             # content_type = ContentType.objects.get_for_model(obj)
+#             # address = AddressFactory.create(content_type=content_type, object_id=obj.id)
+#             # obj.save()
+#             warmer = VersatileImageFieldWarmer(
+#                 instance_or_queryset=obj,
+#                 rendition_key_set="profile_picture",
+#                 image_attr="profile_picture",
+#             )
+#             warmer.warm()
 
 
-class SellerProfileFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = SellerProfile
+# class SellerProfileFactory(factory.django.DjangoModelFactory):
+#     class Meta:
+#         model = SellerProfile
 
-    user = factory.SubFactory(CustomUserFactory(is_seller=True))
-    profile_picture = factory.django.ImageField(width=100, height=100)
+#     user = factory.SubFactory(CustomUserFactory(is_seller=True))
+#     profile_picture = factory.django.ImageField(width=100, height=100)
 
-    @classmethod
-    def _after_postgeneration(cls, obj, create, results=None):
-        if create:
-            # content_type = ContentType.objects.get_for_model(obj)
-            # address = AddressFactory.create(content_type=content_type, object_id=obj.id)
-            # obj.save()
-            warmer = VersatileImageFieldWarmer(
-                instance_or_queryset=obj,
-                rendition_key_set="profile_picture",
-                image_attr="profile_picture",
-            )
-            warmer.warm()
+#     @classmethod
+#     def _after_postgeneration(cls, obj, create, results=None):
+#         if create:
+#             # content_type = ContentType.objects.get_for_model(obj)
+#             # address = AddressFactory.create(content_type=content_type, object_id=obj.id)
+#             # obj.save()
+#             warmer = VersatileImageFieldWarmer(
+#                 instance_or_queryset=obj,
+#                 rendition_key_set="profile_picture",
+#                 image_attr="profile_picture",
+#             )
+#             warmer.warm()
 
 
 class UserRegistrationPayloadFactory(factory.Factory):
