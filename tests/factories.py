@@ -50,12 +50,24 @@ class CustomUserFactory(DjangoModelFactory):
         self.save()
 
 
-# class UserProfileFactory(factory.django.DjangoModelFactory):
-#     class Meta:
-#         model = UserProfile
+class CustomUserWithoutEmailFactory(DjangoModelFactory):
+    class Meta:
+        model = CustomUser
 
-#     user = factory.SubFactory(CustomUserFactory)
-#     profile_picture = factory.django.ImageField(width=100, height=100)
+    username = FactoryFaker("user_name")
+    email = FactoryFaker("email")
+    password = factory.PostGenerationMethodCall("set_password", "testpass123")
+    is_seller = False
+    is_superuser = False
+
+
+class UserProfileFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = UserProfile
+
+    user = factory.SubFactory(CustomUserWithoutEmailFactory)
+    profile_picture = factory.django.ImageField(width=100, height=100)
+
 
 #     @classmethod
 #     def _after_postgeneration(cls, obj, create, results=None):

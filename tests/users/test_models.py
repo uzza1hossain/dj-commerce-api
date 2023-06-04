@@ -1,4 +1,7 @@
 import pytest
+from tests.factories import UserFactory
+from tests.factories import UserProfileFactory
+
 
 @pytest.mark.django_db
 class TestCustomUserModel:
@@ -39,17 +42,32 @@ class TestCustomUserModel:
         assert superuser.get_seller_profile() is None
 
 
-# @pytest.mark.django_db
-# class TestUserProfile:
-#     def test_user_profile_str(user_profile):
-#         assert str(user_profile) == user_profile.user.username
-#         assert user_profile.__str__() == user_profile.user.username
+@pytest.mark.django_db()
+class TestProfile:
+    def setup(self):
+        self.user = UserFactory()
+        self.seller = UserFactory(is_seller=True)
 
-#     #! update this test after creating address factory
-#     def test_user_profile_get_addresses(user_profile):
-#         address = user_profile.get_addresses().first()
-#         assert address is None
-#         # assert address.content_object == user_profile
+    def test_user_profile_str(self):
+        assert str(self.user.user_profile) == self.user.user_profile.user.username
+        assert self.user.user_profile.__str__() == self.user.user_profile.user.username
+
+    #! update this test after creating address factory
+    def test_user_profile_get_addresses(self):
+        address = self.user.user_profile.get_addresses().first()
+        assert address is None
+        # assert address.content_object == user_profile
+    
+    def test_seller_profile_str(self):
+        assert str(self.seller.seller_profile) == self.seller.seller_profile.user.username
+        assert self.seller.seller_profile.__str__() == self.seller.seller_profile.user.username
+    
+    #! update this test after creating address factory
+    def test_seller_profile_get_addresses(self):
+        address = self.seller.seller_profile.get_addresses().first()
+        assert address is None
+        # assert address.content_object == seller_profile
+    
 
 
 # @pytest.mark.django_db()

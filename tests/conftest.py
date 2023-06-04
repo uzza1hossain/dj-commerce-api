@@ -3,10 +3,11 @@ from django.core.management import call_command
 from pytest_factoryboy import register
 
 from .factories import CustomUserFactory
-# from .factories import SellerProfileFactory
 from .factories import UserFactory
-# from .factories import UserProfileFactory
+from .factories import UserProfileFactory
 from .factories import UserRegistrationPayloadFactory
+
+# from .factories import SellerProfileFactory
 
 
 @pytest.fixture(autouse=True)
@@ -43,6 +44,12 @@ def seller():
 @pytest.fixture
 def superuser():
     return CustomUserFactory(is_superuser=True)
+
+
+@pytest.fixture(scope="function")
+@pytest.mark.django_db
+def user_profile(user):
+    return UserProfileFactory(user=user)
 
 
 # register(CustomUserFactory)

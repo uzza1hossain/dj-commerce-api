@@ -387,7 +387,7 @@ class TestAuthEndpoints:
         self.payload["password2"] = "new_password"
         self._send_login_request()
         client.logout()
-        
+
     def test_verify_and_refresh_token(self):
         self._send_registration_request()
         verification_code = extract_verification_code_from_email(mail.outbox[0].body)
@@ -407,4 +407,3 @@ class TestAuthEndpoints:
         assert refresh.status_code == status.HTTP_200_OK
         assert refresh.data["access"] != access_token
         client.logout()
-
