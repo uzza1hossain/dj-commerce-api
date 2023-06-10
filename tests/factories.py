@@ -8,6 +8,7 @@ from address.models import Address
 from address.models import Country
 from address.models import State
 from allauth.account.models import EmailAddress
+from brands.models import Brand
 from categories.models import Category
 from factory import Faker as FactoryFaker
 from factory.django import DjangoModelFactory
@@ -15,13 +16,14 @@ from factory.fuzzy import FuzzyChoice
 from faker import Faker
 from faker.providers import BaseProvider
 from faker_e164.providers import E164Provider
+from media_assets.models import AssetFile
+from media_assets.models import MediaAsset
 from pytest_factoryboy import named_model
 from versatileimagefield.image_warmer import VersatileImageFieldWarmer
 
 from users.models import CustomUser
 from users.models import SellerProfile
 from users.models import UserProfile
-
 
 fake = Faker()
 
@@ -151,3 +153,48 @@ class CategoriesFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: f"category{n:02}")
     is_active = False
+
+
+class MediaAssetFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = MediaAsset
+
+    title = factory.Sequence(lambda n: f"Media Asset {n}")
+    description = factory.Faker("paragraph")
+
+    # owner = factory.SubFactory(CustomUserFactory, is_seller=True)
+    @factory.lazy_attribute
+    def owner(self):
+        seller = CustomUserFactory(is_seller=True)
+        return seller.seller_profile
+
+
+class AssetFileFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = AssetFile
+
+    file = factory.django.FileField(filename="example.jpg")
+    alt_text = factory.Faker("sentence")
+    # owner = factory.SubFactory(CustomUserFactory, is_seller=True)
+    media_asset = factory.SubFactory(MediaAssetFactory)
+
+    @factory.lazy_attribute
+    def owner(self):
+        seller = CustomUserFactory(is_seller=True)
+        return seller.seller_profile
+
+
+class BrandFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Brand
+
+    name = factory.Sequence(lambda n: f"Brand {n}")
+    description = factory.Faker("text", max_nb_chars=200)
+    # owner = factory.SubFactory(CustomUserFactory, is_seller=True)
+    assets = factory.SubFactory(MediaAssetFactory)
+    is_public = factory.Faker("boolean")
+
+    @factory.lazy_attribute
+    def owner(self):
+        seller = CustomUserFactory(is_seller=True)
+        return seller.seller_profile
