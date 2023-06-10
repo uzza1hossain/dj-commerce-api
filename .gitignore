@@ -139,6 +139,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+cov_html/
 
 # Spyder project settings
 .spyderproject

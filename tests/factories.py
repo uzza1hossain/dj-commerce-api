@@ -8,6 +8,7 @@ from address.models import Address
 from address.models import Country
 from address.models import State
 from allauth.account.models import EmailAddress
+from categories.models import Category
 from factory import Faker as FactoryFaker
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice
@@ -20,6 +21,7 @@ from versatileimagefield.image_warmer import VersatileImageFieldWarmer
 from users.models import CustomUser
 from users.models import SellerProfile
 from users.models import UserProfile
+
 
 fake = Faker()
 
@@ -141,3 +143,11 @@ class UserFactory(factory.django.DjangoModelFactory):
         # Update the user's email field with the verified email
         self.email = email_address.email
         self.save()
+
+
+class CategoriesFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Category
+
+    name = factory.Sequence(lambda n: f"category{n:02}")
+    is_active = False

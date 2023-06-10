@@ -7,6 +7,7 @@ from tests.factories import UserProfileFactory
 class TestCustomUserModel:
     def test_custom_user_str(self, user):
         assert user.__str__() == user.username
+        assert str(user) == user.username
 
     def test_custom_user_is_seller(self, user, seller):
         assert isinstance(user.is_seller, bool)
@@ -57,17 +58,21 @@ class TestProfile:
         address = self.user.user_profile.get_addresses().first()
         assert address is None
         # assert address.content_object == user_profile
-    
+
     def test_seller_profile_str(self):
-        assert str(self.seller.seller_profile) == self.seller.seller_profile.user.username
-        assert self.seller.seller_profile.__str__() == self.seller.seller_profile.user.username
-    
+        assert (
+            str(self.seller.seller_profile) == self.seller.seller_profile.user.username
+        )
+        assert (
+            self.seller.seller_profile.__str__()
+            == self.seller.seller_profile.user.username
+        )
+
     #! update this test after creating address factory
     def test_seller_profile_get_addresses(self):
         address = self.seller.seller_profile.get_addresses().first()
         assert address is None
         # assert address.content_object == seller_profile
-    
 
 
 # @pytest.mark.django_db()
