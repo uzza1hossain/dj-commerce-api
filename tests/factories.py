@@ -192,7 +192,7 @@ class BrandFactory(factory.django.DjangoModelFactory):
     description = factory.Faker("text", max_nb_chars=200)
     # owner = factory.SubFactory(CustomUserFactory, is_seller=True)
     assets = factory.SubFactory(MediaAssetFactory)
-    is_public = factory.Faker("boolean")
+    is_public = False
 
     @factory.lazy_attribute
     def owner(self):

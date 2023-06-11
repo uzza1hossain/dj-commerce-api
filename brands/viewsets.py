@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import viewsets
 
 from .models import Brand
@@ -16,7 +17,7 @@ class BrandViewSet(viewsets.ModelViewSet):
         if user.is_staff or user.is_anonymous or not hasattr(user, "seller_profile"):  # type: ignore
             return Brand.objects.all()
         else:
-            return Brand.objects.filter(owner=user.seller_profile) | Brand.objects.filter(is_public=True)  # type: ignore
+            return Brand.objects.filter(Q(owner=user.seller_profile) | Q(is_public=True))  # type: ignore
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user.seller_profile)  # type: ignore

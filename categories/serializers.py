@@ -2,10 +2,16 @@ from rest_framework import serializers
 
 from .models import Category
 
+
 class CategoryToggleActiveSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("CategoryToggleActiveSerializer called.")
+
     class Meta:
         model = Category
         fields = []
+
 
 class CategorySerializer(serializers.ModelSerializer):
     children = serializers.SerializerMethodField()
@@ -18,4 +24,4 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_children(self, obj) -> list:
         serializer = self.__class__(obj.children.all(), many=True)
-        return serializer.data # type: ignore
+        return serializer.data  # type: ignore

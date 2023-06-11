@@ -21,8 +21,7 @@ class CategoryViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "toggle_active":
             return CategoryToggleActiveSerializer
-        else:
-            return CategorySerializer
+        return CategorySerializer
 
     @action(
         detail=True,
@@ -31,11 +30,12 @@ class CategoryViewSet(ModelViewSet):
     )
     def toggle_active(self, request, slug=None):
         category = self.get_object()
+
         category.is_active = not category.is_active
         category.save()
 
         return Response(
             {
-                "detail": f"Toggle successful. Set {not category.is_active} to {category.is_active}."
+                "detail": f"Toggle successful. Active state changed to {'active' if category.is_active else 'inactive'}."
             }
         )
