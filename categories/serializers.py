@@ -4,10 +4,6 @@ from .models import Category
 
 
 class CategoryToggleActiveSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        print("CategoryToggleActiveSerializer called.")
-
     class Meta:
         model = Category
         fields = []
