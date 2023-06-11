@@ -154,19 +154,19 @@ class TestCAtegoryViewSet:
         )
         self.client.logout()
 
-    # def test_toggle_active_with_action_specified(self):
-    #     self.client.force_authenticate(user=self.super_user)
-    #     response = self.client.patch(
-    #         f"/api/v1/categories/{self.category.slug}/toggle-active/",
-    #         data={},
-    #         action="toggle_active",
-    #     )
-    #     assert response.status_code == 200
-    #     assert (
-    #         response.json()["detail"]
-    #         == f"Toggle successful. Set {self.category.is_active} to {not self.category.is_active}."
-    #     )
-    #     self.client.logout()
+    def test_toggle_active_with_action_specified(self):
+        self.client.force_authenticate(user=self.super_user)
+        response = self.client.patch(
+            f"/api/v1/categories/{self.category.slug}/toggle-active/",
+            data={},
+            action="toggle_active",
+        )
+        assert response.status_code == 200
+        assert (
+            response.json()["detail"]
+            == f"Toggle successful. Active state changed to {'inactive' if self.category.is_active else 'active'}."
+        )
+        self.client.logout()
 
     def test_toggle_active_unauthenticated(self):
         response = self.client.patch(
